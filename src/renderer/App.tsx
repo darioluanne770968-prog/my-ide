@@ -42,6 +42,61 @@ import Timeline, { TimelineEntry } from './components/Timeline';
 import { useLSPClient, LSPStatus } from './components/LSPClient';
 import LinterConfig, { LintRule, FormatOptions, defaultESLintRules, defaultPrettierOptions } from './components/Linter';
 
+// New feature imports - AI Enhanced
+import AICommitMessage from './components/AICommitMessage';
+import AICodeReview from './components/AICodeReview';
+import AIRefactor from './components/AIRefactor';
+import AITestGenerator from './components/AITestGenerator';
+import AIDocGenerator from './components/AIDocGenerator';
+
+// New feature imports - Protocol Support
+import HTTPClient from './components/HTTPClient';
+import WebSocketDebugger from './components/WebSocketDebugger';
+import GraphQLPlayground from './components/GraphQLPlayground';
+
+// New feature imports - UX
+import SessionRestore from './components/SessionRestore';
+import WelcomePage from './components/WelcomePage';
+
+// New feature imports - Testing
+import TestExplorer from './components/TestExplorer';
+import CodeCoverage from './components/CodeCoverage';
+
+// New feature imports - Git Enhanced
+import ConflictResolver from './components/ConflictResolver';
+import PRReview from './components/PRReview';
+import GitWorktree from './components/GitWorktree';
+import CommitSigning from './components/CommitSigning';
+
+// New feature imports - Utilities
+import DataFormatter from './components/DataFormatter';
+import EncoderDecoder from './components/EncoderDecoder';
+import ColorPicker from './components/ColorPicker';
+import RegexTester from './components/RegexTester';
+import DiffTool from './components/DiffTool';
+
+// New feature imports - Editor Enhanced
+import StickyScroll from './components/StickyScroll';
+import InlayHints from './components/InlayHints';
+import QuickActions from './components/QuickActions';
+import CallHierarchy from './components/CallHierarchy';
+import TypeHierarchy from './components/TypeHierarchy';
+
+// New feature imports - Project Management
+import WorkspaceManager from './components/WorkspaceManager';
+import ProjectTemplates from './components/ProjectTemplates';
+import DockerIntegration from './components/DockerIntegration';
+import DatabaseExplorer from './components/DatabaseExplorer';
+import PerformanceProfiler from './components/PerformanceProfiler';
+
+// New feature imports - Collaboration
+import RemoteSSH from './components/RemoteSSH';
+import LiveShare from './components/LiveShare';
+
+// New feature imports - Other
+import InteractiveTutorial from './components/InteractiveTutorial';
+import AutoUpdate from './components/AutoUpdate';
+
 interface OpenFile {
   path: string;
   name: string;
@@ -115,6 +170,61 @@ function App() {
   const [eslintRules, setEslintRules] = useState<LintRule[]>(defaultESLintRules);
   const [prettierOptions, setPrettierOptions] = useState<FormatOptions>(defaultPrettierOptions);
   const [lspStatus, setLspStatus] = useState<'starting' | 'ready' | 'error' | 'stopped'>('stopped');
+
+  // New feature states - AI Enhanced
+  const [showAICommitMessage, setShowAICommitMessage] = useState(false);
+  const [showAICodeReview, setShowAICodeReview] = useState(false);
+  const [showAIRefactor, setShowAIRefactor] = useState(false);
+  const [showAITestGenerator, setShowAITestGenerator] = useState(false);
+  const [showAIDocGenerator, setShowAIDocGenerator] = useState(false);
+
+  // New feature states - Protocol Support
+  const [showHTTPClient, setShowHTTPClient] = useState(false);
+  const [showWebSocketDebugger, setShowWebSocketDebugger] = useState(false);
+  const [showGraphQLPlayground, setShowGraphQLPlayground] = useState(false);
+
+  // New feature states - UX
+  const [showSessionRestore, setShowSessionRestore] = useState(false);
+  const [showWelcomePage, setShowWelcomePage] = useState(true);
+
+  // New feature states - Testing
+  const [showTestExplorer, setShowTestExplorer] = useState(false);
+  const [showCodeCoverage, setShowCodeCoverage] = useState(false);
+
+  // New feature states - Git Enhanced
+  const [showConflictResolver, setShowConflictResolver] = useState(false);
+  const [showPRReview, setShowPRReview] = useState(false);
+  const [showGitWorktree, setShowGitWorktree] = useState(false);
+  const [showCommitSigning, setShowCommitSigning] = useState(false);
+
+  // New feature states - Utilities
+  const [showDataFormatter, setShowDataFormatter] = useState(false);
+  const [showEncoderDecoder, setShowEncoderDecoder] = useState(false);
+  const [showColorPicker, setShowColorPicker] = useState(false);
+  const [showRegexTester, setShowRegexTester] = useState(false);
+  const [showDiffTool, setShowDiffTool] = useState(false);
+
+  // New feature states - Editor Enhanced
+  const [showStickyScroll, setShowStickyScroll] = useState(true);
+  const [showInlayHints, setShowInlayHints] = useState(true);
+  const [showQuickActions, setShowQuickActions] = useState(false);
+  const [showCallHierarchy, setShowCallHierarchy] = useState(false);
+  const [showTypeHierarchy, setShowTypeHierarchy] = useState(false);
+
+  // New feature states - Project Management
+  const [showWorkspaceManager, setShowWorkspaceManager] = useState(false);
+  const [showProjectTemplates, setShowProjectTemplates] = useState(false);
+  const [showDockerIntegration, setShowDockerIntegration] = useState(false);
+  const [showDatabaseExplorer, setShowDatabaseExplorer] = useState(false);
+  const [showPerformanceProfiler, setShowPerformanceProfiler] = useState(false);
+
+  // New feature states - Collaboration
+  const [showRemoteSSH, setShowRemoteSSH] = useState(false);
+  const [showLiveShare, setShowLiveShare] = useState(false);
+
+  // New feature states - Other
+  const [showInteractiveTutorial, setShowInteractiveTutorial] = useState(false);
+  const [showAutoUpdate, setShowAutoUpdate] = useState(false);
 
   const fileTreeRefreshKey = useRef(0);
 
@@ -533,6 +643,49 @@ function App() {
     { id: 'preferences.keybindings', label: 'Keyboard Shortcuts', category: 'Preferences', shortcut: 'Ctrl+K Ctrl+S', action: () => setShowKeybindingsEditor(true) },
     { id: 'preferences.extensions', label: 'Extensions', category: 'Preferences', action: () => setShowExtensionManager(true) },
     { id: 'preferences.linter', label: 'Configure Linter', category: 'Preferences', action: () => setShowLinterConfig(true) },
+    // New feature commands - AI Enhanced
+    { id: 'ai.commitMessage', label: 'AI: Generate Commit Message', category: 'AI', action: () => setShowAICommitMessage(true) },
+    { id: 'ai.codeReview', label: 'AI: Code Review', category: 'AI', action: () => setShowAICodeReview(true) },
+    { id: 'ai.refactor', label: 'AI: Refactor Code', category: 'AI', action: () => setShowAIRefactor(true) },
+    { id: 'ai.generateTests', label: 'AI: Generate Tests', category: 'AI', action: () => setShowAITestGenerator(true) },
+    { id: 'ai.generateDocs', label: 'AI: Generate Documentation', category: 'AI', action: () => setShowAIDocGenerator(true) },
+    // New feature commands - Protocol Support
+    { id: 'tools.httpClient', label: 'HTTP Client', category: 'Tools', action: () => setShowHTTPClient(true) },
+    { id: 'tools.websocketDebugger', label: 'WebSocket Debugger', category: 'Tools', action: () => setShowWebSocketDebugger(true) },
+    { id: 'tools.graphqlPlayground', label: 'GraphQL Playground', category: 'Tools', action: () => setShowGraphQLPlayground(true) },
+    // New feature commands - Testing
+    { id: 'test.explorer', label: 'Test Explorer', category: 'Test', action: () => setShowTestExplorer(true) },
+    { id: 'test.coverage', label: 'Code Coverage', category: 'Test', action: () => setShowCodeCoverage(true) },
+    // New feature commands - Git Enhanced
+    { id: 'git.conflictResolver', label: 'Resolve Conflicts', category: 'Git', action: () => setShowConflictResolver(true) },
+    { id: 'git.prReview', label: 'PR Review', category: 'Git', action: () => setShowPRReview(true) },
+    { id: 'git.worktree', label: 'Git Worktrees', category: 'Git', action: () => setShowGitWorktree(true) },
+    { id: 'git.commitSigning', label: 'Commit Signing', category: 'Git', action: () => setShowCommitSigning(true) },
+    // New feature commands - Utilities
+    { id: 'tools.dataFormatter', label: 'Data Formatter (JSON/YAML)', category: 'Tools', action: () => setShowDataFormatter(true) },
+    { id: 'tools.encoderDecoder', label: 'Encoder/Decoder (Base64/URL)', category: 'Tools', action: () => setShowEncoderDecoder(true) },
+    { id: 'tools.colorPicker', label: 'Color Picker', category: 'Tools', action: () => setShowColorPicker(true) },
+    { id: 'tools.regexTester', label: 'Regex Tester', category: 'Tools', action: () => setShowRegexTester(true) },
+    { id: 'tools.diffTool', label: 'Diff Tool', category: 'Tools', action: () => setShowDiffTool(true) },
+    // New feature commands - Editor Enhanced
+    { id: 'view.stickyScroll', label: 'Toggle Sticky Scroll', category: 'View', action: () => setShowStickyScroll(p => !p) },
+    { id: 'view.inlayHints', label: 'Toggle Inlay Hints', category: 'View', action: () => setShowInlayHints(p => !p) },
+    { id: 'view.quickActions', label: 'Quick Actions', category: 'View', action: () => setShowQuickActions(true) },
+    { id: 'view.callHierarchy', label: 'Show Call Hierarchy', category: 'View', action: () => setShowCallHierarchy(true) },
+    { id: 'view.typeHierarchy', label: 'Show Type Hierarchy', category: 'View', action: () => setShowTypeHierarchy(true) },
+    // New feature commands - Project Management
+    { id: 'file.workspaceManager', label: 'Workspace Manager', category: 'File', action: () => setShowWorkspaceManager(true) },
+    { id: 'file.projectTemplates', label: 'Project Templates', category: 'File', action: () => setShowProjectTemplates(true) },
+    { id: 'tools.docker', label: 'Docker Integration', category: 'Tools', action: () => setShowDockerIntegration(true) },
+    { id: 'tools.database', label: 'Database Explorer', category: 'Tools', action: () => setShowDatabaseExplorer(true) },
+    { id: 'tools.profiler', label: 'Performance Profiler', category: 'Tools', action: () => setShowPerformanceProfiler(true) },
+    // New feature commands - Collaboration
+    { id: 'remote.ssh', label: 'Remote SSH', category: 'Remote', action: () => setShowRemoteSSH(true) },
+    { id: 'remote.liveShare', label: 'Live Share', category: 'Remote', action: () => setShowLiveShare(true) },
+    // New feature commands - Other
+    { id: 'help.tutorial', label: 'Interactive Tutorial', category: 'Help', action: () => setShowInteractiveTutorial(true) },
+    { id: 'help.updates', label: 'Check for Updates', category: 'Help', action: () => setShowAutoUpdate(true) },
+    { id: 'file.sessionRestore', label: 'Restore Session', category: 'File', action: () => setShowSessionRestore(true) },
   ];
 
   const renderSidebarContent = () => {
@@ -1093,6 +1246,488 @@ function App() {
           status={lspStatus}
         />
       </div>
+
+      {/* AI Commit Message Modal */}
+      {showAICommitMessage && rootPath && (
+        <div className="modal-overlay" onClick={() => setShowAICommitMessage(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <AICommitMessage
+              rootPath={rootPath}
+              apiKey={settings.aiApiKey}
+              model={settings.aiModel}
+              onCommit={(message) => {
+                addNotification('success', 'Commit created: ' + message.substring(0, 50) + '...');
+                setShowAICommitMessage(false);
+              }}
+              onClose={() => setShowAICommitMessage(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* AI Code Review Modal */}
+      {showAICodeReview && activeFileData && (
+        <div className="modal-overlay" onClick={() => setShowAICodeReview(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <AICodeReview
+              code={activeFileData.content}
+              fileName={activeFileData.name}
+              language={getLanguageFromPath(activeFileData.path)}
+              apiKey={settings.aiApiKey}
+              model={settings.aiModel}
+              onClose={() => setShowAICodeReview(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* AI Refactor Modal */}
+      {showAIRefactor && activeFileData && (
+        <div className="modal-overlay" onClick={() => setShowAIRefactor(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <AIRefactor
+              code={activeFileData.content}
+              language={getLanguageFromPath(activeFileData.path)}
+              apiKey={settings.aiApiKey}
+              model={settings.aiModel}
+              onApply={(newCode) => {
+                handleContentChange(activeFileData.path, newCode);
+                setShowAIRefactor(false);
+                addNotification('success', 'Code refactored successfully');
+              }}
+              onClose={() => setShowAIRefactor(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* AI Test Generator Modal */}
+      {showAITestGenerator && activeFileData && (
+        <div className="modal-overlay" onClick={() => setShowAITestGenerator(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <AITestGenerator
+              code={activeFileData.content}
+              fileName={activeFileData.name}
+              language={getLanguageFromPath(activeFileData.path)}
+              apiKey={settings.aiApiKey}
+              model={settings.aiModel}
+              onSaveTests={(tests) => {
+                addNotification('success', 'Tests generated and saved');
+                setShowAITestGenerator(false);
+              }}
+              onClose={() => setShowAITestGenerator(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* AI Doc Generator Modal */}
+      {showAIDocGenerator && activeFileData && (
+        <div className="modal-overlay" onClick={() => setShowAIDocGenerator(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <AIDocGenerator
+              code={activeFileData.content}
+              language={getLanguageFromPath(activeFileData.path)}
+              apiKey={settings.aiApiKey}
+              model={settings.aiModel}
+              onApply={(newCode) => {
+                handleContentChange(activeFileData.path, newCode);
+                setShowAIDocGenerator(false);
+                addNotification('success', 'Documentation added');
+              }}
+              onClose={() => setShowAIDocGenerator(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* HTTP Client Modal */}
+      {showHTTPClient && (
+        <div className="modal-overlay" onClick={() => setShowHTTPClient(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <HTTPClient onClose={() => setShowHTTPClient(false)} />
+          </div>
+        </div>
+      )}
+
+      {/* WebSocket Debugger Modal */}
+      {showWebSocketDebugger && (
+        <div className="modal-overlay" onClick={() => setShowWebSocketDebugger(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <WebSocketDebugger onClose={() => setShowWebSocketDebugger(false)} />
+          </div>
+        </div>
+      )}
+
+      {/* GraphQL Playground Modal */}
+      {showGraphQLPlayground && (
+        <div className="modal-overlay" onClick={() => setShowGraphQLPlayground(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <GraphQLPlayground onClose={() => setShowGraphQLPlayground(false)} />
+          </div>
+        </div>
+      )}
+
+      {/* Session Restore Modal */}
+      {showSessionRestore && (
+        <div className="modal-overlay" onClick={() => setShowSessionRestore(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <SessionRestore
+              currentSession={{
+                id: 'current',
+                name: 'Current Session',
+                openFiles: openFiles.map(f => f.path),
+                activeFile: activeFile || undefined,
+                rootPath: rootPath || undefined,
+                timestamp: new Date()
+              }}
+              onRestore={(session) => {
+                if (session.rootPath) setRootPath(session.rootPath);
+                setShowSessionRestore(false);
+                addNotification('success', 'Session restored');
+              }}
+              onClose={() => setShowSessionRestore(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Welcome Page */}
+      {showWelcomePage && !rootPath && (
+        <WelcomePage
+          recentProjects={recentProjects}
+          onOpenFolder={handleOpenFolder}
+          onOpenProject={(path) => {
+            setRootPath(path);
+            setShowWelcomePage(false);
+          }}
+          onNewProject={() => {
+            setShowProjectTemplates(true);
+            setShowWelcomePage(false);
+          }}
+          onClose={() => setShowWelcomePage(false)}
+        />
+      )}
+
+      {/* Test Explorer Modal */}
+      {showTestExplorer && rootPath && (
+        <div className="modal-overlay" onClick={() => setShowTestExplorer(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <TestExplorer
+              rootPath={rootPath}
+              onTestClick={(test) => {
+                if (test.filePath) {
+                  handleFileSelect(test.filePath, test.filePath.split('/').pop() || '', test.line);
+                }
+              }}
+              onClose={() => setShowTestExplorer(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Code Coverage Modal */}
+      {showCodeCoverage && rootPath && (
+        <div className="modal-overlay" onClick={() => setShowCodeCoverage(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <CodeCoverage
+              rootPath={rootPath}
+              onFileClick={(filePath) => handleFileSelect(filePath, filePath.split('/').pop() || '')}
+              onClose={() => setShowCodeCoverage(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Conflict Resolver Modal */}
+      {showConflictResolver && rootPath && (
+        <div className="modal-overlay" onClick={() => setShowConflictResolver(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <ConflictResolver
+              rootPath={rootPath}
+              onResolved={() => {
+                addNotification('success', 'Conflicts resolved');
+                setShowConflictResolver(false);
+              }}
+              onClose={() => setShowConflictResolver(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* PR Review Modal */}
+      {showPRReview && rootPath && (
+        <div className="modal-overlay" onClick={() => setShowPRReview(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <PRReview
+              rootPath={rootPath}
+              onClose={() => setShowPRReview(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Git Worktree Modal */}
+      {showGitWorktree && rootPath && (
+        <div className="modal-overlay" onClick={() => setShowGitWorktree(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <GitWorktree
+              rootPath={rootPath}
+              onWorktreeSelect={(path) => {
+                setRootPath(path);
+                setShowGitWorktree(false);
+              }}
+              onClose={() => setShowGitWorktree(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Commit Signing Modal */}
+      {showCommitSigning && (
+        <div className="modal-overlay" onClick={() => setShowCommitSigning(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <CommitSigning onClose={() => setShowCommitSigning(false)} />
+          </div>
+        </div>
+      )}
+
+      {/* Data Formatter Modal */}
+      {showDataFormatter && (
+        <div className="modal-overlay" onClick={() => setShowDataFormatter(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <DataFormatter onClose={() => setShowDataFormatter(false)} />
+          </div>
+        </div>
+      )}
+
+      {/* Encoder Decoder Modal */}
+      {showEncoderDecoder && (
+        <div className="modal-overlay" onClick={() => setShowEncoderDecoder(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <EncoderDecoder onClose={() => setShowEncoderDecoder(false)} />
+          </div>
+        </div>
+      )}
+
+      {/* Color Picker Modal */}
+      {showColorPicker && (
+        <div className="modal-overlay" onClick={() => setShowColorPicker(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <ColorPicker
+              initialColor="#3498db"
+              onColorChange={() => {}}
+              onClose={() => setShowColorPicker(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Regex Tester Modal */}
+      {showRegexTester && (
+        <div className="modal-overlay" onClick={() => setShowRegexTester(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <RegexTester onClose={() => setShowRegexTester(false)} />
+          </div>
+        </div>
+      )}
+
+      {/* Diff Tool Modal */}
+      {showDiffTool && (
+        <div className="modal-overlay" onClick={() => setShowDiffTool(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <DiffTool onClose={() => setShowDiffTool(false)} />
+          </div>
+        </div>
+      )}
+
+      {/* Quick Actions */}
+      {showQuickActions && activeFileData && (
+        <QuickActions
+          filePath={activeFileData.path}
+          line={cursorPosition.line}
+          column={cursorPosition.column}
+          onAction={(action) => {
+            addNotification('info', `Applied: ${action.title}`);
+            setShowQuickActions(false);
+          }}
+          onClose={() => setShowQuickActions(false)}
+        />
+      )}
+
+      {/* Call Hierarchy Modal */}
+      {showCallHierarchy && activeFileData && (
+        <div className="modal-overlay" onClick={() => setShowCallHierarchy(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <CallHierarchy
+              filePath={activeFileData.path}
+              functionName="currentFunction"
+              onNavigate={(item) => {
+                handleFileSelect(item.filePath, item.filePath.split('/').pop() || '', item.line);
+                setShowCallHierarchy(false);
+              }}
+              onClose={() => setShowCallHierarchy(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Type Hierarchy Modal */}
+      {showTypeHierarchy && activeFileData && (
+        <div className="modal-overlay" onClick={() => setShowTypeHierarchy(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <TypeHierarchy
+              filePath={activeFileData.path}
+              typeName="CurrentType"
+              onNavigate={(item) => {
+                handleFileSelect(item.filePath, item.filePath.split('/').pop() || '', item.line);
+                setShowTypeHierarchy(false);
+              }}
+              onClose={() => setShowTypeHierarchy(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Workspace Manager Modal */}
+      {showWorkspaceManager && (
+        <div className="modal-overlay" onClick={() => setShowWorkspaceManager(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <WorkspaceManager
+              onOpenWorkspace={(workspace) => {
+                if (workspace.folders.length > 0) {
+                  setRootPath(workspace.folders[0].path);
+                }
+                setShowWorkspaceManager(false);
+              }}
+              onClose={() => setShowWorkspaceManager(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Project Templates Modal */}
+      {showProjectTemplates && (
+        <div className="modal-overlay" onClick={() => setShowProjectTemplates(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <ProjectTemplates
+              onCreateProject={(path) => {
+                setRootPath(path);
+                setShowProjectTemplates(false);
+                addNotification('success', 'Project created');
+              }}
+              onClose={() => setShowProjectTemplates(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Docker Integration Modal */}
+      {showDockerIntegration && (
+        <div className="modal-overlay" onClick={() => setShowDockerIntegration(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <DockerIntegration onClose={() => setShowDockerIntegration(false)} />
+          </div>
+        </div>
+      )}
+
+      {/* Database Explorer Modal */}
+      {showDatabaseExplorer && (
+        <div className="modal-overlay" onClick={() => setShowDatabaseExplorer(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <DatabaseExplorer onClose={() => setShowDatabaseExplorer(false)} />
+          </div>
+        </div>
+      )}
+
+      {/* Performance Profiler Modal */}
+      {showPerformanceProfiler && rootPath && (
+        <div className="modal-overlay" onClick={() => setShowPerformanceProfiler(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <PerformanceProfiler
+              rootPath={rootPath}
+              onClose={() => setShowPerformanceProfiler(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Remote SSH Modal */}
+      {showRemoteSSH && (
+        <div className="modal-overlay" onClick={() => setShowRemoteSSH(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <RemoteSSH
+              onOpenRemoteFolder={(conn, path) => {
+                addNotification('info', `Connected to ${conn.host}:${path}`);
+                setShowRemoteSSH(false);
+              }}
+              onClose={() => setShowRemoteSSH(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Live Share Modal */}
+      {showLiveShare && (
+        <div className="modal-overlay" onClick={() => setShowLiveShare(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <LiveShare
+              currentFile={activeFileData?.path}
+              userName="User"
+              onClose={() => setShowLiveShare(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Interactive Tutorial Modal */}
+      {showInteractiveTutorial && (
+        <div className="modal-overlay" onClick={() => setShowInteractiveTutorial(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <InteractiveTutorial
+              onAction={(action) => {
+                if (action === 'openFolder') handleOpenFolder();
+                else if (action === 'toggleTerminal') setShowTerminal(true);
+                else if (action === 'openCommandPalette') setShowCommandPalette(true);
+                else if (action === 'openGitPanel') setActivePanel('git');
+                else if (action === 'openAIPanel') setActivePanel('ai');
+              }}
+              onClose={() => setShowInteractiveTutorial(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Auto Update Modal */}
+      {showAutoUpdate && (
+        <div className="modal-overlay" onClick={() => setShowAutoUpdate(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <AutoUpdate
+              currentVersion="1.0.0"
+              onClose={() => setShowAutoUpdate(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Sticky Scroll (rendered in editor area) */}
+      {showStickyScroll && activeFileData && (
+        <StickyScroll
+          content={activeFileData.content}
+          currentLine={cursorPosition.line}
+          language={getLanguageFromPath(activeFileData.path)}
+          onScopeClick={(line) => setCursorPosition({ line, column: 1 })}
+        />
+      )}
+
+      {/* Inlay Hints (rendered in editor area) */}
+      {showInlayHints && activeFileData && (
+        <InlayHints
+          content={activeFileData.content}
+          language={getLanguageFromPath(activeFileData.path)}
+          visibleRange={{ startLine: Math.max(1, cursorPosition.line - 20), endLine: cursorPosition.line + 20 }}
+        />
+      )}
 
       {/* Context Menu */}
       {contextMenu && (

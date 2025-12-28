@@ -30,10 +30,10 @@ import GoToLine from './components/GoToLine';
 import ProblemsPanel, { Diagnostic } from './components/ProblemsPanel';
 import Outline, { DocumentSymbol } from './components/Outline';
 import GitGraph from './components/GitGraph';
-import Debugger, { DebugSession, Breakpoint } from './components/Debugger';
+import Debugger, { Breakpoint } from './components/Debugger';
 import SnippetsManager, { Snippet, defaultSnippets } from './components/Snippets';
 import RecentProjects, { RecentProject } from './components/RecentProjects';
-import ThemeEditor, { CustomTheme, builtInThemes } from './components/ThemeEditor';
+import ThemeEditor, { Theme, builtInThemes } from './components/ThemeEditor';
 import ZenMode from './components/ZenMode';
 import Minimap from './components/Minimap';
 import ExtensionManager, { Extension } from './components/ExtensionManager';
@@ -192,14 +192,14 @@ function App() {
   const [documentSymbols, setDocumentSymbols] = useState<DocumentSymbol[]>([]);
   const [showGitGraph, setShowGitGraph] = useState(false);
   const [showDebugger, setShowDebugger] = useState(false);
-  const [debugSession, setDebugSession] = useState<DebugSession | null>(null);
+  const [debugSession, setDebugSession] = useState<{ id: string; status: string; name: string } | null>(null);
   const [breakpoints, setBreakpoints] = useState<Breakpoint[]>([]);
   const [showSnippets, setShowSnippets] = useState(false);
   const [snippets, setSnippets] = useState<Snippet[]>(defaultSnippets);
   const [showRecentProjects, setShowRecentProjects] = useState(false);
   const [recentProjects, setRecentProjects] = useState<RecentProject[]>([]);
   const [showThemeEditor, setShowThemeEditor] = useState(false);
-  const [customThemes, setCustomThemes] = useState<CustomTheme[]>(builtInThemes);
+  const [customThemes, setCustomThemes] = useState<Theme[]>(builtInThemes);
   const [isZenMode, setIsZenMode] = useState(false);
   const [showMinimap, setShowMinimap] = useState(true);
   const [showExtensionManager, setShowExtensionManager] = useState(false);
@@ -247,8 +247,8 @@ function App() {
   const [showDiffTool, setShowDiffTool] = useState(false);
 
   // New feature states - Editor Enhanced
-  const [showStickyScroll, setShowStickyScroll] = useState(true);
-  const [showInlayHints, setShowInlayHints] = useState(true);
+  const [showStickyScroll, setShowStickyScroll] = useState(false);
+  const [showInlayHints, setShowInlayHints] = useState(false);
   const [showQuickActions, setShowQuickActions] = useState(false);
   const [showCallHierarchy, setShowCallHierarchy] = useState(false);
   const [showTypeHierarchy, setShowTypeHierarchy] = useState(false);
@@ -275,9 +275,9 @@ function App() {
   const [showAIPairProgrammer, setShowAIPairProgrammer] = useState(false);
 
   // New Advanced feature states - Editor Enhanced
-  const [showCodeLens, setShowCodeLens] = useState(true);
-  const [showRainbowBrackets, setShowRainbowBrackets] = useState(true);
-  const [showSemanticHighlighting, setShowSemanticHighlighting] = useState(true);
+  const [showCodeLens, setShowCodeLens] = useState(false);
+  const [showRainbowBrackets, setShowRainbowBrackets] = useState(false);
+  const [showSemanticHighlighting, setShowSemanticHighlighting] = useState(false);
   const [showMultiCursor, setShowMultiCursor] = useState(false);
 
   // New Advanced feature states - Git Advanced
@@ -311,6 +311,29 @@ function App() {
   const [showMarkdownWYSIWYG, setShowMarkdownWYSIWYG] = useState(false);
 
   const fileTreeRefreshKey = useRef(0);
+
+  // Helper functions (defined early for use in hooks)
+  const getLanguageFromPath = useCallback((filePath: string): string => {
+    const ext = filePath.split('.').pop()?.toLowerCase();
+    const languageMap: Record<string, string> = {
+      ts: 'typescript',
+      tsx: 'typescriptreact',
+      js: 'javascript',
+      jsx: 'javascriptreact',
+      json: 'json',
+      html: 'html',
+      css: 'css',
+      scss: 'scss',
+      md: 'markdown',
+      py: 'python',
+      rs: 'rust',
+      go: 'go',
+    };
+    return languageMap[ext || ''] || 'plaintext';
+  }, []);
+
+  // Derived state (defined early for use in hooks)
+  const activeFileData = openFiles.find((f) => f.path === activeFile);
 
   // LSP Client hook
   const lspClient = useLSPClient({
@@ -642,27 +665,6 @@ function App() {
       addNotification('error', 'Failed to load diff');
     }
   }, [rootPath, addNotification]);
-
-  const activeFileData = openFiles.find((f) => f.path === activeFile);
-
-  const getLanguageFromPath = (filePath: string): string => {
-    const ext = filePath.split('.').pop()?.toLowerCase();
-    const languageMap: Record<string, string> = {
-      ts: 'typescript',
-      tsx: 'typescriptreact',
-      js: 'javascript',
-      jsx: 'javascriptreact',
-      json: 'json',
-      html: 'html',
-      css: 'css',
-      scss: 'scss',
-      md: 'markdown',
-      py: 'python',
-      rs: 'rust',
-      go: 'go',
-    };
-    return languageMap[ext || ''] || 'plaintext';
-  };
 
   const getLanguageDisplayName = (filePath: string): string => {
     const ext = filePath.split('.').pop()?.toLowerCase();
@@ -1189,8 +1191,9 @@ function App() {
         <div className="bottom-panel problems-panel-container">
           <ProblemsPanel
             diagnostics={diagnostics}
-            onDiagnosticClick={(diagnostic) => {
-              handleFileSelect(diagnostic.filePath, diagnostic.fileName, diagnostic.line);
+            onNavigate={(filePath, line, column) => {
+              const fileName = filePath.split('/').pop() || filePath;
+              handleFileSelect(filePath, fileName, line);
             }}
             onClose={() => setShowProblemsPanel(false)}
           />
@@ -1202,10 +1205,9 @@ function App() {
         <div className="outline-sidebar">
           <Outline
             symbols={documentSymbols}
-            filePath={activeFileData.path}
             currentLine={cursorPosition.line}
-            onSymbolClick={(symbol) => {
-              setCursorPosition({ line: symbol.range.startLine, column: symbol.range.startColumn });
+            onNavigate={(line, column) => {
+              setCursorPosition({ line, column });
             }}
           />
           <button className="close-outline" onClick={() => setShowOutline(false)}>x</button>
@@ -1216,24 +1218,13 @@ function App() {
       {showDebugger && (
         <div className="debugger-panel">
           <Debugger
-            session={debugSession}
+            rootPath={rootPath || ''}
             breakpoints={breakpoints}
-            onStart={() => setDebugSession({ id: Date.now().toString(), status: 'running', name: 'Debug Session' })}
-            onPause={() => setDebugSession(s => s ? { ...s, status: 'paused' } : null)}
-            onContinue={() => setDebugSession(s => s ? { ...s, status: 'running' } : null)}
-            onStop={() => { setDebugSession(null); setShowDebugger(false); }}
-            onStepOver={() => {}}
-            onStepInto={() => {}}
-            onStepOut={() => {}}
-            onBreakpointToggle={(bp) => {
-              setBreakpoints(prev =>
-                prev.some(b => b.id === bp.id)
-                  ? prev.filter(b => b.id !== bp.id)
-                  : [...prev, bp]
-              );
+            onBreakpointChange={setBreakpoints}
+            onNavigate={(filePath, line) => {
+              const fileName = filePath.split('/').pop() || filePath;
+              handleFileSelect(filePath, fileName, line);
             }}
-            onWatchAdd={() => {}}
-            onEvaluate={() => {}}
           />
         </div>
       )}
@@ -1269,12 +1260,13 @@ function App() {
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <RecentProjects
               projects={recentProjects}
-              onOpen={(path) => {
+              onOpenProject={(path) => {
                 setRootPath(path);
                 setShowRecentProjects(false);
               }}
-              onRemove={(path) => setRecentProjects(prev => prev.filter(p => p.path !== path))}
-              onPin={(path) => setRecentProjects(prev => prev.map(p => p.path === path ? { ...p, pinned: !p.pinned } : p))}
+              onRemoveProject={(path) => setRecentProjects(prev => prev.filter(p => p.path !== path))}
+              onPinProject={(path) => setRecentProjects(prev => prev.map(p => p.path === path ? { ...p, pinned: !p.pinned } : p))}
+              onClearRecent={() => setRecentProjects([])}
               onClose={() => setShowRecentProjects(false)}
             />
           </div>
@@ -1287,9 +1279,10 @@ function App() {
           <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
             <ThemeEditor
               themes={customThemes}
-              currentTheme={settings.theme}
-              onThemeSelect={(themeName) => setSettings(s => ({ ...s, theme: themeName }))}
+              currentTheme={customThemes.find(t => t.id === settings.theme) || customThemes[0]}
+              onThemeChange={(theme) => setSettings(s => ({ ...s, theme: theme.id }))}
               onThemeSave={(theme) => setCustomThemes(prev => [...prev.filter(t => t.id !== theme.id), theme])}
+              onThemeDelete={(id) => setCustomThemes(prev => prev.filter(t => t.id !== id))}
               onClose={() => setShowThemeEditor(false)}
             />
           </div>
@@ -1371,11 +1364,11 @@ function App() {
         <div className="modal-overlay" onClick={() => setShowAICommitMessage(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <AICommitMessage
-              rootPath={rootPath}
+              stagedChanges=""
               apiKey={settings.aiApiKey}
               model={settings.aiModel}
-              onCommit={(message) => {
-                addNotification('success', 'Commit created: ' + message.substring(0, 50) + '...');
+              onGenerated={(message: string) => {
+                addNotification('success', 'Commit message: ' + message.substring(0, 50) + '...');
                 setShowAICommitMessage(false);
               }}
               onClose={() => setShowAICommitMessage(false)}
@@ -1390,7 +1383,7 @@ function App() {
           <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
             <AICodeReview
               code={activeFileData.content}
-              fileName={activeFileData.name}
+              filePath={activeFileData.path}
               language={getLanguageFromPath(activeFileData.path)}
               apiKey={settings.aiApiKey}
               model={settings.aiModel}
@@ -1426,11 +1419,11 @@ function App() {
           <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
             <AITestGenerator
               code={activeFileData.content}
-              fileName={activeFileData.name}
+              filePath={activeFileData.path}
               language={getLanguageFromPath(activeFileData.path)}
               apiKey={settings.aiApiKey}
               model={settings.aiModel}
-              onSaveTests={(tests) => {
+              onInsert={(testCode: string) => {
                 addNotification('success', 'Tests generated and saved');
                 setShowAITestGenerator(false);
               }}
@@ -1495,17 +1488,17 @@ function App() {
               currentSession={{
                 id: 'current',
                 name: 'Current Session',
-                openFiles: openFiles.map(f => f.path),
-                activeFile: activeFile || undefined,
-                rootPath: rootPath || undefined,
-                timestamp: new Date()
+                openFiles: openFiles.map(f => ({ path: f.path, name: f.name })),
+                activeFile: activeFile || null,
+                rootPath: rootPath || null,
+                timestamp: Date.now()
               }}
               onRestore={(session) => {
                 if (session.rootPath) setRootPath(session.rootPath);
                 setShowSessionRestore(false);
                 addNotification('success', 'Session restored');
               }}
-              onClose={() => setShowSessionRestore(false)}
+              onDismiss={() => setShowSessionRestore(false)}
             />
           </div>
         </div>
@@ -1516,15 +1509,16 @@ function App() {
         <WelcomePage
           recentProjects={recentProjects}
           onOpenFolder={handleOpenFolder}
-          onOpenProject={(path) => {
+          onOpenRecent={(path: string) => {
             setRootPath(path);
             setShowWelcomePage(false);
           }}
-          onNewProject={() => {
+          onNewFile={() => {
             setShowProjectTemplates(true);
             setShowWelcomePage(false);
           }}
-          onClose={() => setShowWelcomePage(false)}
+          onShowSettings={() => setShowSettings(true)}
+          onShowTutorial={() => setShowInteractiveTutorial(true)}
         />
       )}
 
@@ -1534,10 +1528,8 @@ function App() {
           <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
             <TestExplorer
               rootPath={rootPath}
-              onTestClick={(test) => {
-                if (test.filePath) {
-                  handleFileSelect(test.filePath, test.filePath.split('/').pop() || '', test.line);
-                }
+              onNavigate={(filePath: string, line: number) => {
+                handleFileSelect(filePath, filePath.split('/').pop() || '', line);
               }}
               onClose={() => setShowTestExplorer(false)}
             />

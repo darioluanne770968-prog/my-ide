@@ -97,6 +97,48 @@ import LiveShare from './components/LiveShare';
 import InteractiveTutorial from './components/InteractiveTutorial';
 import AutoUpdate from './components/AutoUpdate';
 
+// New Advanced feature imports - AI Enhanced
+import AICodeExplainer from './components/AICodeExplainer';
+import AIBugDetector from './components/AIBugDetector';
+import AICodeTranslator from './components/AICodeTranslator';
+import AIPairProgrammer from './components/AIPairProgrammer';
+
+// New Advanced feature imports - Editor Enhanced
+import CodeLens from './components/CodeLens';
+import RainbowBrackets from './components/RainbowBrackets';
+import SemanticHighlighting from './components/SemanticHighlighting';
+import MultiCursor from './components/MultiCursor';
+
+// New Advanced feature imports - Git Advanced
+import InteractiveRebase from './components/InteractiveRebase';
+import CherryPickUI from './components/CherryPickUI';
+import GitBisect from './components/GitBisect';
+import SubmoduleManager from './components/SubmoduleManager';
+
+// New Advanced feature imports - DevOps & Cloud
+import KubernetesExplorer from './components/KubernetesExplorer';
+import CICDPipeline from './components/CICDPipeline';
+import CloudExplorer from './components/CloudExplorer';
+import EnvManager from './components/EnvManager';
+
+// New Advanced feature imports - Security & Analysis
+import SecurityScanner from './components/SecurityScanner';
+import DependencyGraph from './components/DependencyGraph';
+import BundleAnalyzer from './components/BundleAnalyzer';
+import MemoryProfiler from './components/MemoryProfiler';
+
+// New Advanced feature imports - Productivity
+import PomodoroTimer from './components/PomodoroTimer';
+import TimeTracker from './components/TimeTracker';
+import KanbanBoard from './components/KanbanBoard';
+import NoteTaking from './components/NoteTaking';
+
+// New Advanced feature imports - Language Tools
+import SQLQueryBuilder from './components/SQLQueryBuilder';
+import APIDesigner from './components/APIDesigner';
+import SchemaDesigner from './components/SchemaDesigner';
+import MarkdownWYSIWYG from './components/MarkdownWYSIWYG';
+
 interface OpenFile {
   path: string;
   name: string;
@@ -225,6 +267,48 @@ function App() {
   // New feature states - Other
   const [showInteractiveTutorial, setShowInteractiveTutorial] = useState(false);
   const [showAutoUpdate, setShowAutoUpdate] = useState(false);
+
+  // New Advanced feature states - AI Enhanced
+  const [showAICodeExplainer, setShowAICodeExplainer] = useState(false);
+  const [showAIBugDetector, setShowAIBugDetector] = useState(false);
+  const [showAICodeTranslator, setShowAICodeTranslator] = useState(false);
+  const [showAIPairProgrammer, setShowAIPairProgrammer] = useState(false);
+
+  // New Advanced feature states - Editor Enhanced
+  const [showCodeLens, setShowCodeLens] = useState(true);
+  const [showRainbowBrackets, setShowRainbowBrackets] = useState(true);
+  const [showSemanticHighlighting, setShowSemanticHighlighting] = useState(true);
+  const [showMultiCursor, setShowMultiCursor] = useState(false);
+
+  // New Advanced feature states - Git Advanced
+  const [showInteractiveRebase, setShowInteractiveRebase] = useState(false);
+  const [showCherryPickUI, setShowCherryPickUI] = useState(false);
+  const [showGitBisect, setShowGitBisect] = useState(false);
+  const [showSubmoduleManager, setShowSubmoduleManager] = useState(false);
+
+  // New Advanced feature states - DevOps & Cloud
+  const [showKubernetesExplorer, setShowKubernetesExplorer] = useState(false);
+  const [showCICDPipeline, setShowCICDPipeline] = useState(false);
+  const [showCloudExplorer, setShowCloudExplorer] = useState(false);
+  const [showEnvManager, setShowEnvManager] = useState(false);
+
+  // New Advanced feature states - Security & Analysis
+  const [showSecurityScanner, setShowSecurityScanner] = useState(false);
+  const [showDependencyGraph, setShowDependencyGraph] = useState(false);
+  const [showBundleAnalyzer, setShowBundleAnalyzer] = useState(false);
+  const [showMemoryProfiler, setShowMemoryProfiler] = useState(false);
+
+  // New Advanced feature states - Productivity
+  const [showPomodoroTimer, setShowPomodoroTimer] = useState(false);
+  const [showTimeTracker, setShowTimeTracker] = useState(false);
+  const [showKanbanBoard, setShowKanbanBoard] = useState(false);
+  const [showNoteTaking, setShowNoteTaking] = useState(false);
+
+  // New Advanced feature states - Language Tools
+  const [showSQLQueryBuilder, setShowSQLQueryBuilder] = useState(false);
+  const [showAPIDesigner, setShowAPIDesigner] = useState(false);
+  const [showSchemaDesigner, setShowSchemaDesigner] = useState(false);
+  const [showMarkdownWYSIWYG, setShowMarkdownWYSIWYG] = useState(false);
 
   const fileTreeRefreshKey = useRef(0);
 
@@ -686,6 +770,41 @@ function App() {
     { id: 'help.tutorial', label: 'Interactive Tutorial', category: 'Help', action: () => setShowInteractiveTutorial(true) },
     { id: 'help.updates', label: 'Check for Updates', category: 'Help', action: () => setShowAutoUpdate(true) },
     { id: 'file.sessionRestore', label: 'Restore Session', category: 'File', action: () => setShowSessionRestore(true) },
+    // New Advanced feature commands - AI Enhanced
+    { id: 'ai.codeExplainer', label: 'AI: Explain Code', category: 'AI', action: () => setShowAICodeExplainer(true) },
+    { id: 'ai.bugDetector', label: 'AI: Detect Bugs', category: 'AI', action: () => setShowAIBugDetector(true) },
+    { id: 'ai.codeTranslator', label: 'AI: Translate Code', category: 'AI', action: () => setShowAICodeTranslator(true) },
+    { id: 'ai.pairProgrammer', label: 'AI: Pair Programmer', category: 'AI', action: () => setShowAIPairProgrammer(true) },
+    // New Advanced feature commands - Editor Enhanced
+    { id: 'view.codeLens', label: 'Toggle Code Lens', category: 'View', action: () => setShowCodeLens(p => !p) },
+    { id: 'view.rainbowBrackets', label: 'Toggle Rainbow Brackets', category: 'View', action: () => setShowRainbowBrackets(p => !p) },
+    { id: 'view.semanticHighlighting', label: 'Toggle Semantic Highlighting', category: 'View', action: () => setShowSemanticHighlighting(p => !p) },
+    { id: 'edit.multiCursor', label: 'Multi-Cursor Mode', category: 'Edit', action: () => setShowMultiCursor(true) },
+    // New Advanced feature commands - Git Advanced
+    { id: 'git.interactiveRebase', label: 'Interactive Rebase', category: 'Git', action: () => setShowInteractiveRebase(true) },
+    { id: 'git.cherryPick', label: 'Cherry Pick', category: 'Git', action: () => setShowCherryPickUI(true) },
+    { id: 'git.bisect', label: 'Git Bisect', category: 'Git', action: () => setShowGitBisect(true) },
+    { id: 'git.submodules', label: 'Manage Submodules', category: 'Git', action: () => setShowSubmoduleManager(true) },
+    // New Advanced feature commands - DevOps & Cloud
+    { id: 'devops.kubernetes', label: 'Kubernetes Explorer', category: 'DevOps', action: () => setShowKubernetesExplorer(true) },
+    { id: 'devops.cicd', label: 'CI/CD Pipelines', category: 'DevOps', action: () => setShowCICDPipeline(true) },
+    { id: 'devops.cloud', label: 'Cloud Explorer', category: 'DevOps', action: () => setShowCloudExplorer(true) },
+    { id: 'devops.env', label: 'Environment Variables', category: 'DevOps', action: () => setShowEnvManager(true) },
+    // New Advanced feature commands - Security & Analysis
+    { id: 'security.scanner', label: 'Security Scanner', category: 'Security', action: () => setShowSecurityScanner(true) },
+    { id: 'analysis.dependencies', label: 'Dependency Graph', category: 'Analysis', action: () => setShowDependencyGraph(true) },
+    { id: 'analysis.bundle', label: 'Bundle Analyzer', category: 'Analysis', action: () => setShowBundleAnalyzer(true) },
+    { id: 'analysis.memory', label: 'Memory Profiler', category: 'Analysis', action: () => setShowMemoryProfiler(true) },
+    // New Advanced feature commands - Productivity
+    { id: 'productivity.pomodoro', label: 'Pomodoro Timer', category: 'Productivity', action: () => setShowPomodoroTimer(true) },
+    { id: 'productivity.timeTracker', label: 'Time Tracker', category: 'Productivity', action: () => setShowTimeTracker(true) },
+    { id: 'productivity.kanban', label: 'Kanban Board', category: 'Productivity', action: () => setShowKanbanBoard(true) },
+    { id: 'productivity.notes', label: 'Notes', category: 'Productivity', action: () => setShowNoteTaking(true) },
+    // New Advanced feature commands - Language Tools
+    { id: 'tools.sqlBuilder', label: 'SQL Query Builder', category: 'Tools', action: () => setShowSQLQueryBuilder(true) },
+    { id: 'tools.apiDesigner', label: 'API Designer', category: 'Tools', action: () => setShowAPIDesigner(true) },
+    { id: 'tools.schemaDesigner', label: 'Database Schema Designer', category: 'Tools', action: () => setShowSchemaDesigner(true) },
+    { id: 'tools.markdownEditor', label: 'Markdown WYSIWYG Editor', category: 'Tools', action: () => setShowMarkdownWYSIWYG(true) },
   ];
 
   const renderSidebarContent = () => {
@@ -1727,6 +1846,338 @@ function App() {
           language={getLanguageFromPath(activeFileData.path)}
           visibleRange={{ startLine: Math.max(1, cursorPosition.line - 20), endLine: cursorPosition.line + 20 }}
         />
+      )}
+
+      {/* AI Code Explainer Modal */}
+      {showAICodeExplainer && activeFileData && (
+        <div className="modal-overlay" onClick={() => setShowAICodeExplainer(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <AICodeExplainer
+              code={activeFileData.content}
+              language={getLanguageFromPath(activeFileData.path)}
+              apiKey={settings.aiApiKey}
+              onClose={() => setShowAICodeExplainer(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* AI Bug Detector Modal */}
+      {showAIBugDetector && activeFileData && (
+        <div className="modal-overlay" onClick={() => setShowAIBugDetector(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <AIBugDetector
+              code={activeFileData.content}
+              fileName={activeFileData.name}
+              language={getLanguageFromPath(activeFileData.path)}
+              apiKey={settings.aiApiKey}
+              onClose={() => setShowAIBugDetector(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* AI Code Translator Modal */}
+      {showAICodeTranslator && activeFileData && (
+        <div className="modal-overlay" onClick={() => setShowAICodeTranslator(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <AICodeTranslator
+              code={activeFileData.content}
+              sourceLanguage={getLanguageFromPath(activeFileData.path)}
+              apiKey={settings.aiApiKey}
+              onClose={() => setShowAICodeTranslator(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* AI Pair Programmer Modal */}
+      {showAIPairProgrammer && activeFileData && (
+        <div className="modal-overlay" onClick={() => setShowAIPairProgrammer(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <AIPairProgrammer
+              code={activeFileData.content}
+              fileName={activeFileData.name}
+              language={getLanguageFromPath(activeFileData.path)}
+              apiKey={settings.aiApiKey}
+              onApplyChange={(newCode) => {
+                handleContentChange(activeFileData.path, newCode);
+                addNotification('success', 'Code updated');
+              }}
+              onClose={() => setShowAIPairProgrammer(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Code Lens (rendered in editor area) */}
+      {showCodeLens && activeFileData && (
+        <CodeLens
+          content={activeFileData.content}
+          language={getLanguageFromPath(activeFileData.path)}
+          onRunTest={(testName) => addNotification('info', `Running test: ${testName}`)}
+          onShowReferences={(symbol) => addNotification('info', `References for: ${symbol}`)}
+        />
+      )}
+
+      {/* Rainbow Brackets (rendered in editor area) */}
+      {showRainbowBrackets && activeFileData && (
+        <RainbowBrackets
+          content={activeFileData.content}
+          cursorPosition={cursorPosition}
+        />
+      )}
+
+      {/* Semantic Highlighting (rendered in editor area) */}
+      {showSemanticHighlighting && activeFileData && (
+        <SemanticHighlighting
+          content={activeFileData.content}
+          language={getLanguageFromPath(activeFileData.path)}
+        />
+      )}
+
+      {/* Multi Cursor Modal */}
+      {showMultiCursor && activeFileData && (
+        <div className="modal-overlay" onClick={() => setShowMultiCursor(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <MultiCursor
+              content={activeFileData.content}
+              onApply={(newContent) => {
+                handleContentChange(activeFileData.path, newContent);
+                setShowMultiCursor(false);
+              }}
+              onClose={() => setShowMultiCursor(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Interactive Rebase Modal */}
+      {showInteractiveRebase && rootPath && (
+        <div className="modal-overlay" onClick={() => setShowInteractiveRebase(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <InteractiveRebase
+              rootPath={rootPath}
+              onComplete={() => {
+                addNotification('success', 'Rebase completed');
+                setShowInteractiveRebase(false);
+              }}
+              onClose={() => setShowInteractiveRebase(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Cherry Pick UI Modal */}
+      {showCherryPickUI && rootPath && (
+        <div className="modal-overlay" onClick={() => setShowCherryPickUI(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <CherryPickUI
+              rootPath={rootPath}
+              onComplete={() => {
+                addNotification('success', 'Cherry-pick completed');
+                setShowCherryPickUI(false);
+              }}
+              onClose={() => setShowCherryPickUI(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Git Bisect Modal */}
+      {showGitBisect && rootPath && (
+        <div className="modal-overlay" onClick={() => setShowGitBisect(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <GitBisect
+              rootPath={rootPath}
+              onComplete={(commit) => {
+                addNotification('success', `Found bad commit: ${commit}`);
+                setShowGitBisect(false);
+              }}
+              onClose={() => setShowGitBisect(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Submodule Manager Modal */}
+      {showSubmoduleManager && rootPath && (
+        <div className="modal-overlay" onClick={() => setShowSubmoduleManager(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <SubmoduleManager
+              rootPath={rootPath}
+              onClose={() => setShowSubmoduleManager(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Kubernetes Explorer Modal */}
+      {showKubernetesExplorer && (
+        <div className="modal-overlay" onClick={() => setShowKubernetesExplorer(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <KubernetesExplorer onClose={() => setShowKubernetesExplorer(false)} />
+          </div>
+        </div>
+      )}
+
+      {/* CI/CD Pipeline Modal */}
+      {showCICDPipeline && rootPath && (
+        <div className="modal-overlay" onClick={() => setShowCICDPipeline(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <CICDPipeline
+              rootPath={rootPath}
+              onClose={() => setShowCICDPipeline(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Cloud Explorer Modal */}
+      {showCloudExplorer && (
+        <div className="modal-overlay" onClick={() => setShowCloudExplorer(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <CloudExplorer onClose={() => setShowCloudExplorer(false)} />
+          </div>
+        </div>
+      )}
+
+      {/* Environment Manager Modal */}
+      {showEnvManager && rootPath && (
+        <div className="modal-overlay" onClick={() => setShowEnvManager(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <EnvManager
+              rootPath={rootPath}
+              onClose={() => setShowEnvManager(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Security Scanner Modal */}
+      {showSecurityScanner && rootPath && (
+        <div className="modal-overlay" onClick={() => setShowSecurityScanner(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <SecurityScanner
+              rootPath={rootPath}
+              onClose={() => setShowSecurityScanner(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Dependency Graph Modal */}
+      {showDependencyGraph && rootPath && (
+        <div className="modal-overlay" onClick={() => setShowDependencyGraph(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <DependencyGraph
+              rootPath={rootPath}
+              onClose={() => setShowDependencyGraph(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Bundle Analyzer Modal */}
+      {showBundleAnalyzer && rootPath && (
+        <div className="modal-overlay" onClick={() => setShowBundleAnalyzer(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <BundleAnalyzer
+              rootPath={rootPath}
+              onClose={() => setShowBundleAnalyzer(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Memory Profiler Modal */}
+      {showMemoryProfiler && (
+        <div className="modal-overlay" onClick={() => setShowMemoryProfiler(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <MemoryProfiler onClose={() => setShowMemoryProfiler(false)} />
+          </div>
+        </div>
+      )}
+
+      {/* Pomodoro Timer Modal */}
+      {showPomodoroTimer && (
+        <div className="modal-overlay" onClick={() => setShowPomodoroTimer(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <PomodoroTimer onClose={() => setShowPomodoroTimer(false)} />
+          </div>
+        </div>
+      )}
+
+      {/* Time Tracker Modal */}
+      {showTimeTracker && (
+        <div className="modal-overlay" onClick={() => setShowTimeTracker(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <TimeTracker onClose={() => setShowTimeTracker(false)} />
+          </div>
+        </div>
+      )}
+
+      {/* Kanban Board Modal */}
+      {showKanbanBoard && (
+        <div className="modal-overlay" onClick={() => setShowKanbanBoard(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <KanbanBoard onClose={() => setShowKanbanBoard(false)} />
+          </div>
+        </div>
+      )}
+
+      {/* Note Taking Modal */}
+      {showNoteTaking && (
+        <div className="modal-overlay" onClick={() => setShowNoteTaking(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <NoteTaking onClose={() => setShowNoteTaking(false)} />
+          </div>
+        </div>
+      )}
+
+      {/* SQL Query Builder Modal */}
+      {showSQLQueryBuilder && (
+        <div className="modal-overlay" onClick={() => setShowSQLQueryBuilder(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <SQLQueryBuilder onClose={() => setShowSQLQueryBuilder(false)} />
+          </div>
+        </div>
+      )}
+
+      {/* API Designer Modal */}
+      {showAPIDesigner && (
+        <div className="modal-overlay" onClick={() => setShowAPIDesigner(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <APIDesigner onClose={() => setShowAPIDesigner(false)} />
+          </div>
+        </div>
+      )}
+
+      {/* Schema Designer Modal */}
+      {showSchemaDesigner && (
+        <div className="modal-overlay" onClick={() => setShowSchemaDesigner(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <SchemaDesigner onClose={() => setShowSchemaDesigner(false)} />
+          </div>
+        </div>
+      )}
+
+      {/* Markdown WYSIWYG Modal */}
+      {showMarkdownWYSIWYG && (
+        <div className="modal-overlay" onClick={() => setShowMarkdownWYSIWYG(false)}>
+          <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+            <MarkdownWYSIWYG
+              initialContent={activeFileData?.content}
+              onSave={(content) => {
+                if (activeFileData) {
+                  handleContentChange(activeFileData.path, content);
+                  addNotification('success', 'Content saved');
+                }
+              }}
+              onClose={() => setShowMarkdownWYSIWYG(false)}
+            />
+          </div>
+        </div>
       )}
 
       {/* Context Menu */}
